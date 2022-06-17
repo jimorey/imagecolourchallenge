@@ -1,0 +1,100 @@
+<html>
+  <head>
+    <title>Coding Challenge</title>
+  </head>
+  <body>
+		<canvas id="canvas"></canvas>
+		<canvas id="canvas2"></canvas>
+  </body>
+</html>
+
+<script>
+	// Create a 256 x 128 canvas
+const canvas = document.getElementById('canvas');
+const ctx = canvas.getContext('2d');
+const imageData = ctx.createImageData(256, 128);
+
+// Create a 256 x 128 canvas
+const canvas2 = document.getElementById('canvas2');
+const ctx2 = canvas2.getContext('2d');
+const imageData2 = ctx2.createImageData(256, 128);
+
+// Generate every colour combination between 0-255 in steps of 8 
+// Going (7,7,7) to (255,255,255) as values must be between 0-255 for imageData data to be valid: https://developer.mozilla.org/en-US/docs/Web/API/ImageData/data
+var colours = [];
+for (let r = 1; r <= 32; r++ ) {
+	for (let g = 1; g <= 32; g++) {
+  	for (let b = 1; b <= 32; b++) {
+    	colours.push({
+      	red: (r * 8) - 1,
+        green: (g * 8) - 1,
+        blue : (b * 8) - 1
+      });
+    }
+  }
+}
+
+// Check some things
+console.log(colours.length);
+console.log(imageData.data.length);
+console.log(colours[0]);
+console.log(colours[32767]);
+
+// Iterate through every pixel of the image and set the pixel colour
+for (let i = 0; i < 32768; i++) {
+  // Modify pixel data
+  imageData.data[i * 4 + 0] = colours[i].red;  // R value
+  imageData.data[i * 4 + 1] = colours[i].green;  // G value
+  imageData.data[i * 4 + 2] = colours[i].blue;  // B value
+  imageData.data[i * 4 + 3] = 255;  // A value (transparency)
+}
+
+function shuffle(array) {
+  let currentIndex = array.length;
+  let randomIndex = 0;
+
+  // While there remain elements to shuffle.
+  while (currentIndex != 0) {
+
+    // Pick a remaining element.
+    randomIndex = Math.floor(Math.random() * currentIndex);
+    currentIndex--;
+
+    // And swap it with the current element.
+    [array[currentIndex], array[randomIndex]] = [
+      array[randomIndex], array[currentIndex]];
+  }
+
+  return array;
+}
+
+// Draw image data to the canvas
+ctx.putImageData(imageData, 20, 20);
+
+// Shuffle the colours for a cool effect
+shuffle(colours);
+
+/*colours.sort(function(a, b) {
+  return a.red-b.green
+});*/
+
+
+// Iterate through every pixel of the image and set the pixel colour
+for (let i = 0; i < 32768; i++) {
+  // Modify pixel data
+  imageData2.data[i * 4 + 0] = colours[i].red;  // R value
+  imageData2.data[i * 4 + 1] = colours[i].green;  // G value
+  imageData2.data[i * 4 + 2] = colours[i].blue;  // B value
+  imageData2.data[i * 4 + 3] = 255;  // A value (transparency)
+}
+
+// Draw image data to the canvas
+ctx2.putImageData(imageData2, 20, 20);
+</script>
+
+<style>
+	canvas {
+  width: 100%;
+  height: auto;
+}
+</style>
