@@ -1,54 +1,74 @@
+<!DOCTYPE html>
 <html>
   <head>
     <title>Coding Challenge</title>
   </head>
   <body>
-		<canvas id="canvas"></canvas>
+		<h1>Generating all the colours</h1>
+		<canvas id="canvas1"></canvas>
+		<h1>Shuffling the colours<h1>
 		<canvas id="canvas2"></canvas>
-  </body>
+		<h1>Having some fun with sort</h1>
+		<input type="button" value="Sort shenanigans" onclick="image3();" />
+		<canvas id="canvas3"></canvas>
+		<h1>Creating my own algorithm</h1>
+		<input type="button" value="Generate" onclick="image4();">
+		<canvas id="canvas4"></canvas>>
+	</body>
 </html>
 
 <script>
-	// Create a 256 x 128 canvas
-const canvas = document.getElementById('canvas');
-const ctx = canvas.getContext('2d');
-const imageData = ctx.createImageData(256, 128);
 
-// Create a 256 x 128 canvas
-const canvas2 = document.getElementById('canvas2');
-const ctx2 = canvas2.getContext('2d');
-const imageData2 = ctx2.createImageData(256, 128);
+// Function to create a canvas for the image
+// html element is canvas
+// context is 2d
+// size of image is 256 x 128 (32768px)
+function createCanvas(canvasId) {
+	let element = document.getElementById(canvasId);
+	let ctx = element.getContext('2d');
+	let imageData = ctx.createImageData(256, 128);
 
-// Generate every colour combination between 0-255 in steps of 8 
-// Going (7,7,7) to (255,255,255) as values must be between 0-255 for imageData data to be valid: https://developer.mozilla.org/en-US/docs/Web/API/ImageData/data
-var colours = [];
-for (let r = 1; r <= 32; r++ ) {
-	for (let g = 1; g <= 32; g++) {
-  	for (let b = 1; b <= 32; b++) {
-    	colours.push({
-      	red: (r * 8) - 1,
-        green: (g * 8) - 1,
-        blue : (b * 8) - 1
-      });
-    }
-  }
+	let canvas = {
+		element: element,
+		ctx: ctx,
+		imageData: imageData 
+	} 
+
+	return canvas;
 }
 
-// Check some things
-console.log(colours.length);
-console.log(imageData.data.length);
-console.log(colours[0]);
-console.log(colours[32767]);
+// Function to generate every colour combination between 0-255 in steps of 8 
+// Starting at (7,7,7) and finishing at (255,255,255) as values must be between 0-255 for imageData data to be valid: https://developer.mozilla.org/en-US/docs/Web/API/ImageData/data
+function generateColours() {
+	let colours = [];
 
-// Iterate through every pixel of the image and set the pixel colour
-for (let i = 0; i < 32768; i++) {
-  // Modify pixel data
-  imageData.data[i * 4 + 0] = colours[i].red;  // R value
-  imageData.data[i * 4 + 1] = colours[i].green;  // G value
-  imageData.data[i * 4 + 2] = colours[i].blue;  // B value
-  imageData.data[i * 4 + 3] = 255;  // A value (transparency)
+	for (let r = 1; r <= 32; r++ ) {
+		for (let g = 1; g <= 32; g++) {
+			for (let b = 1; b <= 32; b++) {
+				colours.push({
+					red: (r * 8) - 1,
+					green: (g * 8) - 1,
+					blue : (b * 8) - 1
+				});
+			}
+		}
+	}
+
+	return colours;
 }
 
+// Function to iterate through every pixel of the image and set the pixel colour
+function paintCanvas(canvas, colours) {
+	for (let i = 0; i < 32768; i++) {
+		canvas.imageData.data[i * 4 + 0] = colours[i].red;  // R value
+		canvas.imageData.data[i * 4 + 1] = colours[i].green;  // G value
+		canvas.imageData.data[i * 4 + 2] = colours[i].blue;  // B value
+		canvas.imageData.data[i * 4 + 3] = 255;  // A value (transparency)
+	}
+}
+
+// Function to shuffle an array
+// Fisher–Yates shuffle: https://en.wikipedia.org/wiki/Fisher%E2%80%93Yates_shuffle
 function shuffle(array) {
   let currentIndex = array.length;
   let randomIndex = 0;
@@ -61,40 +81,182 @@ function shuffle(array) {
     currentIndex--;
 
     // And swap it with the current element.
-    [array[currentIndex], array[randomIndex]] = [
-      array[randomIndex], array[currentIndex]];
+    [array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]];
   }
 
   return array;
 }
 
-// Draw image data to the canvas
-ctx.putImageData(imageData, 20, 20);
-
-// Shuffle the colours for a cool effect
-shuffle(colours);
-
-/*colours.sort(function(a, b) {
-  return a.red-b.green
-});*/
-
-
-// Iterate through every pixel of the image and set the pixel colour
-for (let i = 0; i < 32768; i++) {
-  // Modify pixel data
-  imageData2.data[i * 4 + 0] = colours[i].red;  // R value
-  imageData2.data[i * 4 + 1] = colours[i].green;  // G value
-  imageData2.data[i * 4 + 2] = colours[i].blue;  // B value
-  imageData2.data[i * 4 + 3] = 255;  // A value (transparency)
+// Function to generate a random integer between min and max inclusive
+function randomInteger(min, max) {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-// Draw image data to the canvas
-ctx2.putImageData(imageData2, 20, 20);
+// Image 1
+var canvas1 = createCanvas('canvas1');
+var colours1 = generateColours();
+paintCanvas(canvas1, colours1);
+canvas1.ctx.putImageData(canvas1.imageData, 0, 0);
+
+// Check some things
+/*console.log(canvas1.imageData.data.length);
+console.log(colours1.length);
+console.log(colours1[0]);
+console.log(colours1[32767]);*/
+
+// Image 2
+var canvas2 = createCanvas('canvas2');
+var colours2 = generateColours();
+// Shuffle the colours for a cool effect
+shuffle(colours2);
+paintCanvas(canvas2, colours2);
+canvas2.ctx.putImageData(canvas2.imageData, 0, 0);
+
+// Function to generate image3 that gets a bit creative with array sort
+function image3() {
+	let canvas3 = createCanvas('canvas3');
+	let colours3 = generateColours();
+
+	// Sort the array of colours using one of the 9 ways below
+	let  whichSort = randomInteger(0,8);
+	colours3.sort(function(a, b) {
+		switch (whichSort) {
+			case 0:
+				return a.red-b.red;
+			case 1:
+				return a.red-b.green;
+			case 2:
+				return a.red-b.blue;
+			case 3:
+				return a.blue-b.red;
+			case 4:
+				return a.blue-b.blue;
+			case 5:
+				return a.blue-b.green;
+			case 6:
+				return a.green-b.red;
+			case 7:
+				return a.green-b.blue;
+			case 8:
+				return a.green-b.green;
+		}
+	});
+
+	// Sort the array of colours again by totals
+	colours3.sort(function(a, b) {
+		return (a.red + a.blue + a.green) - (b.red + b.blue + b.green);
+	});
+
+	paintCanvas(canvas3, colours3);
+	canvas3.ctx.putImageData(canvas3.imageData, 0, 0);
+};
+
+// Function to generate an image based on my own algorithm
+// pick and random pixel and colour to start with
+// find any adjacent pixels next to the current pixel
+// randomly pick an adjacent pixel and fill with the nearest closest colour until all pixels and colours are used
+// if there are no adjacent pixels pick a new available pixel at random and go from there
+function image4() {
+	let canvas4 = createCanvas('canvas4');
+	let colours4 = generateColours();
+	let pixels = [];
+	for (let x = 0; x < 256; x++) {
+		for (let y = 0; y < 128; y++) {
+			pixels.push({
+				x: x,
+				y: y
+			})
+		}
+	}
+	let indexOfStartPixel = randomInteger(0,32767);
+	let indexOfStartColour = randomInteger(0,32767);
+
+	canvas4.imageData.data[indexOfStartPixel * 4 + 0] = colours4[indexOfStartColour].red;  // R value
+	canvas4.imageData.data[indexOfStartPixel * 4 + 1] = colours4[indexOfStartColour].green;  // G value
+	canvas4.imageData.data[indexOfStartPixel * 4 + 2] = colours4[indexOfStartColour].blue;  // B value
+	canvas4.imageData.data[indexOfStartPixel * 4 + 3] = 255;  // A value (transparency)
+
+	let currentPixel = pixels[indexOfStartPixel];
+	let currentColour = colours4[indexOfStartColour];
+
+	pixels.splice(indexOfStartPixel, 1);
+	colours4.splice(indexOfStartColour, 1);
+
+	while (pixels.length != 0) {
+		// find the next closest colour by using 3d pythagorous
+		// https://stackoverflow.com/questions/69879777/find-the-closest-rgb-value-from-a-table-in-javascript-nodejs
+		let indexOfClosestColour = 0;
+		let competingColour = 0;
+		let winningColour = 0;
+		for (let i = 0; i < colours4.length; i++) {
+			competingColour = Math.sqrt((currentColour.red - colours4[i].red)**2 + (currentColour.green - colours4[i].green)**2 + (currentColour.blue - colours4[i].blue)**2);
+
+			if (competingColour < winningColour || i === 0) {
+				winningColour = competingColour;
+				indexOfClosestColour = i;
+			}
+		}
+
+		// find adjacent pixels
+		// probably a cleaner way to do this
+		let adjacentPixels = [];
+		adjacentPixels = (pixels.filter(pixel => 
+			(pixel.x === currentPixel.x - 1) && (pixel.y === currentPixel.y) ||
+			(pixel.x === currentPixel.x) && (pixel.y === currentPixel.y - 1) ||
+			(pixel.x === currentPixel.x + 1) && (pixel.y === currentPixel.y) ||
+			(pixel.x === currentPixel.x) && (pixel.y === currentPixel.y + 1) ||
+			(pixel.x === currentPixel.x - 1) && (pixel.y === currentPixel.y - 1) ||
+			(pixel.x === currentPixel.x + 1) && (pixel.y === currentPixel.y + 1) ||
+			(pixel.x === currentPixel.x - 1) && (pixel.y === currentPixel.y + 1) ||
+			(pixel.x === currentPixel.x + 1) && (pixel.y === currentPixel.y + 1)
+		));
+
+		let indexOfNextPixel = 0;
+		if (adjacentPixels.length === 0) {
+			// if there are no adjacent pixels pick an available pixel at random
+			indexOfNextPixel = randomInteger(0, pixels.length - 1);
+			// picking the first element in the array has a cool effect too indexOfNextPixel = 0;
+		} else {
+			// else pick a pixel at random from the adjacent pixels to step into
+			let indexOfAdjacentPixel = 0;
+			indexOfAdjacentPixel = randomInteger(0, adjacentPixels.length - 1);
+			// always picking first, last or some other pixel in the adjacent pixel array produces cool effects too
+			// indexOfAdjacentPixel = 0;
+			// indexOfAdjacentPixel = adjacentPixels.length-1;
+			indexOfNextPixel = pixels.indexOf(adjacentPixels[indexOfAdjacentPixel]);
+
+		}
+
+		// workout the index for the pixel in imageData.data as it is a one dimensional array
+		// https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API/Tutorial/Pixel_manipulation_with_canvas
+		indexOfImage = (pixels[indexOfNextPixel].y * 256 * 4) + (pixels[indexOfNextPixel].x * 4);
+		
+		// add the closest colour to the image at that pixel
+		canvas4.imageData.data[indexOfImage + 0] = colours4[indexOfClosestColour].red;  // R value
+		canvas4.imageData.data[indexOfImage + 1] = colours4[indexOfClosestColour].green;  // G value
+		canvas4.imageData.data[indexOfImage + 2] = colours4[indexOfClosestColour].blue;  // B value
+		canvas4.imageData.data[indexOfImage + 3] = 255;  // A value (transparency)
+
+		// set current pixel to next pixel and current colour to closest colour as they were just used
+		currentPixel = pixels[indexOfNextPixel];
+		currentColour = colours4[indexOfClosestColour];
+
+		// remove the closest colour and next pixel as available for use
+		colours4.splice(indexOfClosestColour, 1);
+		pixels.splice(indexOfNextPixel, 1);
+	}
+
+	canvas4.ctx.putImageData(canvas4.imageData, 0, 0);
+};
 </script>
 
 <style>
-	canvas {
+canvas {
   width: 100%;
   height: auto;
+}
+
+body {
+  font-family: Arial, sans-serif;
 }
 </style>
