@@ -10,15 +10,17 @@
 		<canvas id="canvas2"></canvas>
 		<h1>Having some fun with sort</h1>
 		<input type="button" value="Sort shenanigans" onclick="image3();" />
+		<p>click more than once...</p>
 		<canvas id="canvas3"></canvas>
 		<h1>Creating my own algorithm</h1>
 		<input type="button" value="Generate" onclick="image4();">
-		<canvas id="canvas4"></canvas>>
+		<p>click more than once...</p>
+		<p>takes about 15s to generate each click</p>
+		<canvas id="canvas4"></canvas>
 	</body>
 </html>
 
 <script>
-
 // Function to create a canvas for the image
 // html element is canvas
 // context is 2d
@@ -60,10 +62,10 @@ function generateColours() {
 // Function to iterate through every pixel of the image and set the pixel colour
 function paintCanvas(canvas, colours) {
 	for (let i = 0; i < 32768; i++) {
-		canvas.imageData.data[i * 4 + 0] = colours[i].red;  // R value
-		canvas.imageData.data[i * 4 + 1] = colours[i].green;  // G value
-		canvas.imageData.data[i * 4 + 2] = colours[i].blue;  // B value
-		canvas.imageData.data[i * 4 + 3] = 255;  // A value (transparency)
+		canvas.imageData.data[i * 4 + 0] = colours[i].red; // R value
+		canvas.imageData.data[i * 4 + 1] = colours[i].green; // G value
+		canvas.imageData.data[i * 4 + 2] = colours[i].blue; // B value
+		canvas.imageData.data[i * 4 + 3] = 255; // A value (transparency)
 	}
 }
 
@@ -93,8 +95,8 @@ function randomInteger(min, max) {
 }
 
 // Image 1
-var canvas1 = createCanvas('canvas1');
-var colours1 = generateColours();
+let canvas1 = createCanvas('canvas1');
+let colours1 = generateColours();
 paintCanvas(canvas1, colours1);
 canvas1.ctx.putImageData(canvas1.imageData, 0, 0);
 
@@ -105,8 +107,8 @@ console.log(colours1[0]);
 console.log(colours1[32767]);*/
 
 // Image 2
-var canvas2 = createCanvas('canvas2');
-var colours2 = generateColours();
+let canvas2 = createCanvas('canvas2');
+let colours2 = generateColours();
 // Shuffle the colours for a cool effect
 shuffle(colours2);
 paintCanvas(canvas2, colours2);
@@ -152,7 +154,7 @@ function image3() {
 };
 
 // Function to generate an image based on my own algorithm
-// pick and random pixel and colour to start with
+// pick a random pixel and colour to start with
 // find any adjacent pixels next to the current pixel
 // randomly pick an adjacent pixel and fill with the nearest closest colour until all pixels and colours are used
 // if there are no adjacent pixels pick a new available pixel at random and go from there
@@ -215,7 +217,8 @@ function image4() {
 		if (adjacentPixels.length === 0) {
 			// if there are no adjacent pixels pick an available pixel at random
 			indexOfNextPixel = randomInteger(0, pixels.length - 1);
-			// picking the first element in the array has a cool effect too indexOfNextPixel = 0;
+			// picking the first element in the array has a cool effect too
+			// indexOfNextPixel = 0;
 		} else {
 			// else pick a pixel at random from the adjacent pixels to step into
 			let indexOfAdjacentPixel = 0;
