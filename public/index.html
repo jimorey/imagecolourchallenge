@@ -161,6 +161,7 @@ function image3() {
 function image4() {
 	let canvas4 = createCanvas('canvas4');
 	let colours4 = generateColours();
+	shuffle(colours4);
 	let pixels = [];
 	for (let x = 0; x < 256; x++) {
 		for (let y = 0; y < 128; y++) {
@@ -227,7 +228,6 @@ function image4() {
 			// indexOfAdjacentPixel = 0;
 			// indexOfAdjacentPixel = adjacentPixels.length-1;
 			indexOfNextPixel = pixels.indexOf(adjacentPixels[indexOfAdjacentPixel]);
-
 		}
 
 		// workout the index for the pixel in imageData.data as it is a one dimensional array

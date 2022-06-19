@@ -8,4 +8,4 @@ app.get('/', (req, res) => {
     res.send();
 });
 
-app.listen(PORT, () => console.log(`Server listening on port: localhost:${PORT}`));
+app.listen(PORT, () => console.log(`Server listening on port: http://localhost:${PORT}`));
